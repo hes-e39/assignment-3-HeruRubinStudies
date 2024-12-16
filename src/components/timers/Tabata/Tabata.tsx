@@ -24,6 +24,7 @@ interface TabataProps {
     breakDurationExternal?: number;
     classes?: string;
     onComplete?: () => void;
+    currentDescription?: string;
 }
 
 const Tabata: React.FC<TabataProps> = ({
@@ -39,6 +40,7 @@ const Tabata: React.FC<TabataProps> = ({
                                            breakDurationExternal = 5000,
                                            classes,
                                            onComplete,
+                                           currentDescription
                                        }) => {
     const [totalRounds, setTotalRounds] = useState(totalRoundsExternal);
     const [workMinutes, setWorkMinutes] = useState(Math.floor(workDurationExternal / 60000));
@@ -48,6 +50,7 @@ const Tabata: React.FC<TabataProps> = ({
 
     const [workDuration, setWorkDuration] = useState(workDurationExternal);
     const [breakDuration, setBreakDuration] = useState(breakDurationExternal);
+    const [description, setDescription] = useState('');
 
     const [roundsLeft, setRoundsLeft] = useState(totalRounds);
     const [phase, setPhase] = useState<'Work' | 'Break'>('Work');
@@ -83,6 +86,7 @@ const Tabata: React.FC<TabataProps> = ({
                 rounds: totalRounds,
                 workDuration: updatedWorkDuration,
                 breakDuration: updatedBreakDuration,
+                description: description
             });
         }
 
@@ -170,6 +174,7 @@ const Tabata: React.FC<TabataProps> = ({
             {isModalOpen && (
                 <Modal closeFunc={toggleModal} hasCloseBtn title="Configure Tabata Timer">
                     <TabataEditor
+                        description={currentDescription}
                         showMenu={true}
                         setTotalRounds={setTotalRounds}
                         totalRounds={totalRounds}
@@ -183,6 +188,7 @@ const Tabata: React.FC<TabataProps> = ({
                         breakSeconds={breakSeconds}
                         toggleModal={toggleModal}
                         applyCustomConfig={applyCustomConfig}
+                        setDescription={setDescription}
                     />
                 </Modal>
             )}

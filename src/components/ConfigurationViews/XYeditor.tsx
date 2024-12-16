@@ -13,9 +13,24 @@ interface XYEditorProps {
     applyCustomConfig : ()=>void;
     toggleModal : () => void;
     showMenu : boolean;
+    // props for handling description
+    description?: string;
+    setDescription: (newValue: string) => void;
 }
 
-const XYEditor: React.FC<XYEditorProps> = ({showMenu, totalRounds, setTotalRounds, roundMinutes, setRoundMinutes, roundSeconds, setRoundSeconds, applyCustomConfig, toggleModal}) => {
+const XYEditor: React.FC<XYEditorProps> = ({
+                                               showMenu,
+                                               totalRounds,
+                                               setTotalRounds,
+                                               roundMinutes,
+                                               setRoundMinutes,
+                                               roundSeconds,
+                                               setRoundSeconds,
+                                               applyCustomConfig,
+                                               toggleModal,
+                                               description,
+                                               setDescription
+}) => {
     return(
         <>
             <div className={commonTimerStyles.inputsArea}>
@@ -47,10 +62,20 @@ const XYEditor: React.FC<XYEditorProps> = ({showMenu, totalRounds, setTotalRound
                         step={1}
                     />
                 </div>
+                <div className={commonTimerStyles.inputRow}>
+                    <label htmlFor="descriptionInput">Description:</label>
+                    <input
+                        id="descriptionInput"
+                        type="text"
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder={description ?? "Describe this timer..."}
+                    />
+                </div>
             </div>
             {
                 showMenu &&
-                <ConfirmationMenu cancelLabel="Cancel" applyLabel="Apply" apply={applyCustomConfig} cancel={toggleModal} />
+                <ConfirmationMenu cancelLabel="Cancel" applyLabel="Apply" apply={applyCustomConfig}
+                                  cancel={toggleModal}/>
             }
         </>
     )

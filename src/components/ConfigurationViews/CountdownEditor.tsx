@@ -12,22 +12,53 @@ interface CountDownEditorProps {
     setGoalSeconds: (newValue: number) => void;
     applyCustomConfig: () => void;
     toggleModal: () => void;
-    showMenu : boolean;
+    showMenu: boolean;
+
+    // props for hand description
+    description?: string;
+    setDescription: (newValue: string) => void;
+    overrideDescription? : string;
 }
 
-const CountdownEditor: React.FC<CountDownEditorProps> = ({ goalHours, setGoalHours, setGoalMinutes, goalMinutes, setGoalSeconds, goalSeconds, toggleModal, applyCustomConfig, showMenu }) => {
+const CountdownEditor: React.FC<CountDownEditorProps> = ({
+                                                             goalHours,
+                                                             setGoalHours,
+                                                             setGoalMinutes,
+                                                             goalMinutes,
+                                                             setGoalSeconds,
+                                                             goalSeconds,
+                                                             toggleModal,
+                                                             applyCustomConfig,
+                                                             showMenu,
+                                                             setDescription,
+                                                             description
+                                                         }) => {
     return (
         <>
             <div className={commonTimerStyles.inputsArea}>
                 <div className={commonTimerStyles.steppersArea}>
-                    <NumberStepper label="Hours" value={goalHours} onChange={(newValue: number) => setGoalHours(newValue)} min={0} max={100} step={1} />
-                    <NumberStepper label="Minutes" value={goalMinutes} onChange={(newValue: number) => setGoalMinutes(newValue)} min={0} max={59} step={1} />
-                    <NumberStepper label="Seconds" value={goalSeconds} onChange={(newValue: number) => setGoalSeconds(newValue)} min={0} max={59} step={1} />
+                    <NumberStepper label="Hours" value={goalHours} onChange={setGoalHours} min={0} max={100} step={1} />
+                    <NumberStepper label="Minutes" value={goalMinutes} onChange={setGoalMinutes} min={0} max={59} step={1} />
+                    <NumberStepper label="Seconds" value={goalSeconds} onChange={setGoalSeconds} min={0} max={59} step={1} />
+                </div>
+                <div className={commonTimerStyles.inputRow}>
+                    <label htmlFor="descriptionInput">Description:</label>
+                    <input
+                        id="descriptionInput"
+                        type="text"
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder={ description ?? "Describe this timer..." }
+                    />
                 </div>
             </div>
-            {
-                showMenu && <ConfirmationMenu cancelLabel="Cancel" applyLabel="Apply" apply={applyCustomConfig} cancel={toggleModal} />
-            }
+            {showMenu && (
+                <ConfirmationMenu
+                    cancelLabel="Cancel"
+                    applyLabel="Apply"
+                    apply={applyCustomConfig}
+                    cancel={toggleModal}
+                />
+            )}
         </>
     );
 };

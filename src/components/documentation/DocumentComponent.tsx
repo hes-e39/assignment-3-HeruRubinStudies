@@ -1,30 +1,5 @@
-import styled from "styled-components";
-
-const Wrapper = styled.div`
-  border: 1px solid #121212;
-  margin: 20px 0px;
-`;
-
-const Container = styled.div`
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-`;
-
-const Title = styled.div`
-  display: flex;
-  justify-content: center;
-  padding-top: 20px;
-  font-size: 1.3rem;
-`;
-
-const RenderComponent = styled.div`
-  padding: 25px;
-  display: flex;
-  align-items: center;
-`;
-
-const Documentation = styled.table``;
+import type React from "react";
+import styled from "./DocumentationComponent.module.scss";
 
 const DocumentComponent = ({
   title,
@@ -41,11 +16,11 @@ const DocumentComponent = ({
   }[];
 }) => {
   return (
-    <Wrapper>
-      <Title>{title}</Title>
-      <Container>
-        <RenderComponent>{component}</RenderComponent>
-        <Documentation>
+    <div className={styled.Wrapper}>
+      <div className={styled.Title}>{title}</div>
+      <div className={styled.Container}>
+        <div >{component}</div>
+        <table>
           <thead>
             <tr>
               <th>Prop</th>
@@ -68,9 +43,9 @@ const DocumentComponent = ({
               );
             })}
           </tbody>
-        </Documentation>
-      </Container>
-    </Wrapper>
+        </table>
+      </div>
+    </div>
   );
 };
 

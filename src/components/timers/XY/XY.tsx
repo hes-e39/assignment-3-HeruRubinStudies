@@ -22,6 +22,7 @@ interface XYTimerProps {
     roundMinutesExternal?: number;
     roundSecondsExternal?: number;
     classes?: string;
+    currentDescription?: string;
 }
 
 const XY: React.FC<XYTimerProps> = ({
@@ -36,11 +37,12 @@ const XY: React.FC<XYTimerProps> = ({
                                         roundMinutesExternal = 0,
                                         roundSecondsExternal = 4,
                                         classes,
+                                        currentDescription
                                     }) => {
     const [totalRounds, setTotalRounds] = useState(totalRoundsExternal);
     const [roundMinutes, setRoundMinutes] = useState(roundMinutesExternal);
     const [roundSeconds, setRoundSeconds] = useState(roundSecondsExternal);
-
+    const [description, setDescription] = useState('');
     const [roundDuration, setRoundDuration] = useState(
         (roundMinutesExternal * 60 + roundSecondsExternal) * 1000
     );
@@ -68,6 +70,7 @@ const XY: React.FC<XYTimerProps> = ({
         // Update the timer in the sequence
         if(updateTimer && index){
             updateTimer(index, {
+                description: description,
                 rounds: totalRounds,
                 roundMinutes,
                 roundSeconds,
@@ -138,6 +141,7 @@ const XY: React.FC<XYTimerProps> = ({
             {isModalOpen && (
                 <Modal closeFunc={toggleModal} hasCloseBtn title="Configure XY Timer">
                     <XYEditor
+                        description={currentDescription}
                         toggleModal={toggleModal}
                         setRoundSeconds={setRoundSeconds}
                         roundSeconds={roundSeconds}
@@ -147,6 +151,7 @@ const XY: React.FC<XYTimerProps> = ({
                         applyCustomConfig={applyCustomConfig}
                         setTotalRounds={setTotalRounds}
                         showMenu={true}
+                        setDescription={setDescription}
                     />
                 </Modal>
             )}

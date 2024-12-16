@@ -21,9 +21,12 @@ interface CountdownProps {
     pause: () => void;
     start: () => void;
     onComplete?: () => void;
+    overrideDescription?: string;
+    description? : string;
+    currentDescription?: string;
 }
 
-const Countdown: React.FC<CountdownProps> = ({ milliseconds, isRunning, initialTime, reset, index, pause, start, classes, onComplete, updateTimer }) => {
+const Countdown: React.FC<CountdownProps> = ({ currentDescription, milliseconds, isRunning, initialTime, reset, index, pause, start, classes, onComplete, updateTimer }) => {
     const [customTime, setCustomTime] = useState(initialTime);
     const [remainingTime, setRemainingTime] = useState(initialTime);
     const [isCountdownStopped, setIsCountdownStopped] = useState(false);
@@ -33,6 +36,7 @@ const Countdown: React.FC<CountdownProps> = ({ milliseconds, isRunning, initialT
     const [goalHours, setGoalHours] = useState(0);
     const [goalMinutes, setGoalMinutes] = useState(0);
     const [goalSeconds, setGoalSeconds] = useState(0);
+    const [description, setDescription] = useState('');
 
     const progressPercentage = Math.max((remainingTime / customTime) * 100, 0);
 
@@ -88,9 +92,10 @@ const Countdown: React.FC<CountdownProps> = ({ milliseconds, isRunning, initialT
     const toggleModal = () => setIsModalOpen(!isModalOpen);
 
     const applyCustomTime = () => {
+
         const totalMilliseconds = goalHours * 3600000 + goalMinutes * 60000 + goalSeconds * 1000;
-        if (updateTimer && index) {
-            updateTimer(index, { initialTime: totalMilliseconds });
+        if (updateTimer && index !== undefined) {
+            updateTimer(index, { initialTime: totalMilliseconds, description: description });
             setCustomTime(totalMilliseconds);
             setRemainingTime(totalMilliseconds);
             setIsCountdownStopped(false);
@@ -100,9 +105,12 @@ const Countdown: React.FC<CountdownProps> = ({ milliseconds, isRunning, initialT
         }
     };
 
+
+
     return (
         <div className={`${commonTimerStyles.timerContainer} ${classes ?? ''}`}>
             <>
+
                 <FormattedTimeDisplay milliseconds={remainingTime} size="large" useSemicolon />
                 <TimerControls reset={resetCountdown} isRunning={isRunning} pause={pause} start={start}>
                     <ProgressBar progressPercentage={progressPercentage} />
@@ -115,6 +123,8 @@ const Countdown: React.FC<CountdownProps> = ({ milliseconds, isRunning, initialT
             {isModalOpen && (
                 <Modal title="Configure Countdown" closeFunc={toggleModal} hasCloseBtn={true}>
                     <CountdownEditor
+                        description={currentDescription}
+                        setDescription={setDescription}
                         applyCustomConfig={applyCustomTime}
                         toggleModal={toggleModal}
                         setGoalHours={setGoalHours}

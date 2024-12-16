@@ -23,6 +23,8 @@ interface StopWatchProps {
     updateTimer?: (index: number, updatedProperties: Partial<TimerSequenceItem>) => void; // Function to update the timer
     classes?: string;
     onComplete?: () => void; // Callback for when the goal is reached
+    currentDescription?: string;
+    description?: string;
 }
 
 const StopWatch: React.FC<StopWatchProps> = ({
@@ -35,6 +37,7 @@ const StopWatch: React.FC<StopWatchProps> = ({
                                                  updateTimer,
                                                  classes,
                                                  onComplete,
+                                                 currentDescription,
                                              }) => {
     const [laps, setLaps] = useState<{ numberLabel: string; nameLabel: string }[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +49,7 @@ const StopWatch: React.FC<StopWatchProps> = ({
 
     // Calculate goal time in milliseconds
     const goalTime = (goalHours * 3600 + goalMinutes * 60 + goalSeconds) * 1000;
-
+    const [description, setDescription] = useState('');
     // Initialize goal time states when the modal is opened
     useEffect(() => {
         if (isModalOpen) {
@@ -83,7 +86,11 @@ const StopWatch: React.FC<StopWatchProps> = ({
 
         // Update the timer's goal time in the sequence
         if(updateTimer && index){
-            updateTimer(index, { initialTime: updatedGoalTime });
+            updateTimer(index,
+                {
+                    initialTime: updatedGoalTime,
+                    description: description
+                });
         }
 
         setIsModalOpen(false);
@@ -190,6 +197,8 @@ const StopWatch: React.FC<StopWatchProps> = ({
                         setGoalMinutes={setGoalMinutes}
                         setGoalHours={setGoalHours}
                         setGoalSeconds={setGoalSeconds}
+                        setDescription={setDescription}
+                        description={currentDescription}
                     />
                 </Modal>
             )}

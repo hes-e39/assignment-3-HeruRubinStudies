@@ -17,9 +17,27 @@ interface TabataEditorProps{
     applyCustomConfig : () => void;
     toggleModal : () => void;
     showMenu : boolean;
+    // props for handling description
+    description?: string;
+    setDescription: (newValue: string) => void;
 }
 
-const TabataEditor: React.FC<TabataEditorProps> = ({showMenu, totalRounds, setTotalRounds, setWorkMinutes, workMinutes, setWorkSeconds, workSeconds, setBreakMinutes, breakMinutes, setBreakSeconds, breakSeconds, applyCustomConfig, toggleModal}) => {
+const TabataEditor: React.FC<TabataEditorProps> = ({
+                                                       showMenu,
+                                                       totalRounds,
+                                                       setTotalRounds,
+                                                       setWorkMinutes,
+                                                       workMinutes,
+                                                       setWorkSeconds,
+                                                       workSeconds,
+                                                       setBreakMinutes,
+                                                       breakMinutes,
+                                                       setBreakSeconds,
+                                                       breakSeconds,
+                                                       applyCustomConfig,
+                                                       toggleModal,
+                                                       description,
+                                                       setDescription}) => {
     return(
         <>
             <div className={`${commonTimerStyles.inputsArea}`}>
@@ -81,9 +99,19 @@ const TabataEditor: React.FC<TabataEditorProps> = ({showMenu, totalRounds, setTo
                         </div>
                     </section>
                 </div>
+                <div className={commonTimerStyles.inputRow}>
+                    <label htmlFor="descriptionInput">Description:</label>
+                    <input
+                        id="descriptionInput"
+                        type="text"
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder={ description ?? "Describe this timer..." }
+                    />
+                </div>
             </div>
             {
-                showMenu && <ConfirmationMenu cancelLabel="Cancel" applyLabel="Apply" apply={applyCustomConfig} cancel={toggleModal} />
+                showMenu && <ConfirmationMenu cancelLabel="Cancel" applyLabel="Apply" apply={applyCustomConfig}
+                                              cancel={toggleModal}/>
             }
         </>
     )

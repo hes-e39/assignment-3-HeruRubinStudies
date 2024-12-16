@@ -38,7 +38,12 @@ const router = createHashRouter([
                 element: <TimersView />,
             },
             {
-                path: '/sequence',
+                path: '/sequence', // For the default sequence view
+                element: <TimerSequence />,
+            },
+            {
+                // New route that includes the encoded parameter
+                path: '/sequence/:encoded',
                 element: <TimerSequence />,
             },
             {
@@ -49,7 +54,6 @@ const router = createHashRouter([
     },
 ]);
 
-// biome-ignore lint/style/noNonNullAssertion: root html element is there
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <RouterProvider router={router} />

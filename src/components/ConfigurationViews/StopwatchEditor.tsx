@@ -2,6 +2,7 @@ import styles from "../timers/timer-common.module.scss";
 import NumberStepper from "../generic/NumberStepper/NumberStepper.tsx";
 import type React from "react";
 import ConfirmationMenu from "../menus/ConfirmationMenu/ModalConfirmation.tsx";
+import commonTimerStyles from "../timers/timer-common.module.scss";
 
 interface StopwatchEditorProps {
     goalHours : number;
@@ -13,9 +14,11 @@ interface StopwatchEditorProps {
     applyCustomConfig : () => void;
     toggleModal : () => void;
     showMenu : boolean;
+    description?: string;
+    setDescription: (newValue: string) => void;
 }
 
-const StopwatchEditor : React.FC <StopwatchEditorProps> = ({ showMenu, applyCustomConfig, toggleModal, goalHours, setGoalHours, setGoalSeconds, goalSeconds, setGoalMinutes, goalMinutes}) => {
+const StopwatchEditor : React.FC <StopwatchEditorProps> = ({ setDescription, description, showMenu, applyCustomConfig, toggleModal, goalHours, setGoalHours, setGoalSeconds, goalSeconds, setGoalMinutes, goalMinutes}) => {
     return(
         <>
             <div className={styles.goalConfigInputs}>
@@ -45,10 +48,20 @@ const StopwatchEditor : React.FC <StopwatchEditorProps> = ({ showMenu, applyCust
                         step={1}
                     />
                 </div>
+                <div className={commonTimerStyles.inputRow}>
+                    <label htmlFor="descriptionInput">Description:</label>
+                    <input
+                        id="descriptionInput"
+                        type="text"
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder={description ?? "Describe this timer..."}
+                    />
+                </div>
             </div>
             {
                 showMenu &&
-                <ConfirmationMenu cancelLabel="Cancel" applyLabel="Apply" apply={applyCustomConfig} cancel={toggleModal} />
+                <ConfirmationMenu cancelLabel="Cancel" applyLabel="Apply" apply={applyCustomConfig}
+                                  cancel={toggleModal}/>
             }
         </>
     )

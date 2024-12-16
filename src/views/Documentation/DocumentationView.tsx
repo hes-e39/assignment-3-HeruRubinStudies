@@ -1,6 +1,5 @@
 import DocumentComponent from "../../components/documentation/DocumentComponent.tsx";
 import TButton from "../../components/generic/Button/TButton.tsx";
-import Loading from "../../components/generic/Loading.tsx";
 import styles from "./docView.module.scss";
 import Modal from "../../components/generic/Modal/ModalPopUp/Modal.tsx";
 import FormattedTimeDisplay from "../../components/visualization/FormattedTimeDisplay/FormattedTimeDisplay.tsx";
@@ -12,8 +11,6 @@ import StopWatch from "../../components/timers/Stopwatch/Stopwatch.tsx";
 import Tabata from "../../components/timers/Tabata/Tabata.tsx";
 import XY from "../../components/timers/XY/XY.tsx";
 import Logotype from "../../components/Graphics/Branding/Logotype/Logotype.tsx";
-
-
 
 /**
  * You can document your components by using the DocumentComponent component
@@ -31,7 +28,7 @@ const Documentation = () => {
           </div>
         <DocumentComponent
           title="Loading spinner "
-          component={<Loading size="medium" color="#ffa2bf" />}
+          component={<div>Loading...</div>}
           propDocs={[
             {
               prop: "size",

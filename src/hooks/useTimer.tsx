@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { saveToLocalStorage, loadFromLocalStorage } from '../utils/localStorageUtils';
 
 export type TimerType = 'countdown' | 'tabata' | 'stopwatch' | 'xy';
 
@@ -11,16 +12,28 @@ export type TimerSequenceItem = {
     roundMinutes?: number;
     roundSeconds?: number;
     label?: string;
+    description: string;
 };
+
+const LOCAL_STORAGE_KEY = 'timerSequence';
 
 const useTimer = () => {
     const [milliseconds, setMilliseconds] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
-    const [sequence, setSequence] = useState<TimerSequenceItem[]>([]);
+    const [sequence, setSequence] = useState<TimerSequenceItem[]>(() => {
+        // Load initial state from localStorage
+        const savedSequence = loadFromLocalStorage(LOCAL_STORAGE_KEY);
+        return savedSequence ?? [];
+    });
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isSequenceMode, setIsSequenceMode] = useState(false);
 
     const timerRef = useRef<number | null>(null);
+
+    useEffect(() => {
+        // Save sequence to localStorage whenever it changes
+        saveToLocalStorage(LOCAL_STORAGE_KEY, sequence);
+    }, [sequence]);
 
     const start = useCallback(() => {
         if (!isRunning) {
@@ -93,20 +106,22 @@ const useTimer = () => {
         }
     }, [currentIndex, sequence.length, reset, pause]);
 
-    // Handle stopwatch goal time
-    useEffect(() => {
-        const currentTimer = sequence[currentIndex];
-        if (currentTimer?.type === 'stopwatch' && currentTimer.initialTime) {
-            if (milliseconds >= currentTimer.initialTime) {
-                pause();
-                nextTimer();
-            }
-        }
-    }, [milliseconds, sequence, currentIndex, pause, nextTimer]);
-
     const handleTimerCompletion = useCallback(() => {
         nextTimer();
     }, [nextTimer]);
+
+    const reorderTimers = useCallback(
+        (sourceIndex: number, targetIndex: number) => {
+            setSequence((prevSequence) => {
+                const newSequence = [...prevSequence];
+                const [movedItem] = newSequence.splice(sourceIndex, 1);
+                newSequence.splice(targetIndex, 0, movedItem);
+                return newSequence;
+            });
+        },
+        []
+    );
+
 
     return {
         milliseconds,
@@ -123,7 +138,9 @@ const useTimer = () => {
         currentIndex,
         sequence,
         handleTimerCompletion,
+        reorderTimers,
         setCurrentIndex,
+
     };
 };
 
