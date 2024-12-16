@@ -1,14 +1,56 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { RouterProvider, createHashRouter } from 'react-router-dom';
+import { Outlet, RouterProvider, createHashRouter } from 'react-router-dom';
 
-import App from './App';
-import './index.css';
+import './index.scss';
+import mainStyles from './main.module.scss';
+import TimersView from './views/Timers/TimersView.tsx';
+import DocumentationView from './views/Documentation/DocumentationView.tsx';
+import NavMenu from './components/menus/NavMenu/NavMenu.tsx';
+import ListMenu from './components/menus/ListMenu/ListMenu.tsx';
+import TimerSequence from "./views/TimerSequence/TimerSequence.tsx";
+
+const PageIndex = () => {
+    return (
+        <main>
+            <NavMenu>
+                <ListMenu
+                    classes={mainStyles.navListMenu}
+                    menuItems={[
+                        { label: 'Timers', link: '/', iconName: 'timers' },
+                        { label: 'Timer Sequence', link: '/sequence', iconName: 'timers' },
+                        { label: 'Documentation', link: '/docs', iconName: 'documentation' },
+                    ]}
+                />
+            </NavMenu>
+            <Outlet />
+        </main>
+    );
+};
 
 const router = createHashRouter([
     {
         path: '/',
-        element: <App />,
+        element: <PageIndex />,
+        children: [
+            {
+                index: true,
+                element: <TimersView />,
+            },
+            {
+                path: '/sequence', // For the default sequence view
+                element: <TimerSequence />,
+            },
+            {
+                // New route that includes the encoded parameter
+                path: '/sequence/:encoded',
+                element: <TimerSequence />,
+            },
+            {
+                path: '/docs',
+                element: <DocumentationView />,
+            },
+        ],
     },
 ]);
 
