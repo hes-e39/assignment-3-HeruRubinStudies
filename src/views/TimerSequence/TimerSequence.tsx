@@ -1,6 +1,6 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
 import useTimer from '../../hooks/useTimer';
 import Countdown from '../../components/timers/Countdown/Countdown';
@@ -13,7 +13,7 @@ import mainStyles from '../../main.module.scss';
 import commonStyles from '../../common-styles/common-styles.module.scss';
 import Modal from '../../components/generic/Modal/ModalPopUp/Modal';
 import TButton from '../../components/generic/Button/TButton';
-import { decodeSequence, encodeSequence } from "../../utils/sharing";
+import { decodeSequence, encodeSequence } from '../../utils/sharing';
 
 const TimerSequence: React.FC = () => {
     const {
@@ -31,7 +31,7 @@ const TimerSequence: React.FC = () => {
         sequence,
         handleTimerCompletion,
         updateTimer,
-        reorderTimers
+        reorderTimers,
     } = useTimer();
 
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
@@ -54,10 +54,10 @@ const TimerSequence: React.FC = () => {
                     setTimerSequence(storedSequence);
                 } else {
                     setTimerSequence([
-                        { type: 'countdown', label: 'Warm Up', initialTime: 2000, description:'' },
-                        { type: 'tabata', label: 'Stretch', rounds: 2, workDuration: 2000, breakDuration: 1000, description:'' },
-                        { type: 'stopwatch', label: 'Cool Down', initialTime: 2000, description:'' },
-                        { type: 'xy', rounds: 3, label: 'Jumping jacks', roundMinutes: 1, roundSeconds: 20, description:'' },
+                        { type: 'countdown', label: 'Warm Up', initialTime: 2000, description: '' },
+                        { type: 'tabata', label: 'Stretch', rounds: 2, workDuration: 2000, breakDuration: 1000, description: '' },
+                        { type: 'stopwatch', label: 'Cool Down', initialTime: 2000, description: '' },
+                        { type: 'xy', rounds: 3, label: 'Jumping jacks', roundMinutes: 1, roundSeconds: 20, description: '' },
                     ]);
                 }
             }
@@ -68,10 +68,10 @@ const TimerSequence: React.FC = () => {
                 setTimerSequence(storedSequence);
             } else {
                 setTimerSequence([
-                    { type: 'countdown', label: 'Warm Up', initialTime: 2000, description:'' },
-                    { type: 'tabata', label: 'Stretch', rounds: 2, workDuration: 2000, breakDuration: 1000, description:'' },
-                    { type: 'stopwatch', label: 'Cool Down', initialTime: 2000, description:'' },
-                    { type: 'xy', rounds: 3, label: 'Jumping jacks', roundMinutes: 1, roundSeconds: 20, description:'' },
+                    { type: 'countdown', label: 'Warm Up', initialTime: 2000, description: '' },
+                    { type: 'tabata', label: 'Stretch', rounds: 2, workDuration: 2000, breakDuration: 1000, description: '' },
+                    { type: 'stopwatch', label: 'Cool Down', initialTime: 2000, description: '' },
+                    { type: 'xy', rounds: 3, label: 'Jumping jacks', roundMinutes: 1, roundSeconds: 20, description: '' },
                 ]);
             }
         }
@@ -82,9 +82,15 @@ const TimerSequence: React.FC = () => {
     const handleShareClick = () => {
         // Encode current sequence
         const encodedData = encodeSequence(sequence);
-        const baseUrl = window.location.origin;
-        // Use route param style: #/sequence/C;5000;...
-        const url = `${baseUrl}/#/sequence/${encodeURIComponent(encodedData)}`;
+
+        // Extract the base portion of the URL before "#/sequence"
+        const fullUrl = window.location.href;
+        const baseWithoutHash = fullUrl.split('#/')[0];
+        // baseWithoutHash now contains everything before "#/sequence"
+        // For example: "https://example.com/somePath/"
+
+        // Construct the share URL
+        const url = `${baseWithoutHash}#/sequence/${encodeURIComponent(encodedData)}`;
         setShareUrl(url);
         setIsShareModalOpen(true);
     };
@@ -99,9 +105,7 @@ const TimerSequence: React.FC = () => {
     };
 
     return (
-        <div
-            className={`${mainStyles.mainContainer} ${commonStyles.flexVertCenter} ${commonStyles.flexVert} ${commonStyles.flexHorzCenter}`}
-        >
+        <div className={`${mainStyles.mainContainer} ${commonStyles.flexVertCenter} ${commonStyles.flexVert} ${commonStyles.flexHorzCenter}`}>
             <div className={mainStyles.timerArea}>
                 {/* Render only the current timer */}
                 {currentTimer?.type === 'countdown' && (
@@ -162,15 +166,19 @@ const TimerSequence: React.FC = () => {
                     />
                 )}
 
-                <button className={mainStyles.skip} onClick={nextTimer}>Next</button>
-                <button onClick={handleShareClick} className={mainStyles.share}>Share</button>
+                <button className={mainStyles.skip} onClick={nextTimer}>
+                    Next
+                </button>
+                <button onClick={handleShareClick} className={mainStyles.share}>
+                    Share
+                </button>
             </div>
             <TimerTracker
                 onReorderTimers={reorderTimers}
                 timerSequence={sequence}
                 currentTimerIndex={currentIndex}
                 elapsedMilliseconds={milliseconds}
-                onTimerSelect={(index) => setCurrentIndex(index)}
+                onTimerSelect={index => setCurrentIndex(index)}
                 onDelete={deleteTimer}
                 onAddTimer={addTimer}
             />
